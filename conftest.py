@@ -21,7 +21,7 @@ def browser(request):
     if user_language != None:
         print("\nstart chrome browser for test..")
         browser = webdriver.Chrome(options=options)
-        browser.implicitly_wait(5)
+        #browser.implicitly_wait(5)
         browser.user_language = user_language
     else:
         raise pytest.UsageError("--language must be selected")
