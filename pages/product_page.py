@@ -32,7 +32,10 @@ class ProductPage(BasePage):
     
     def get_product_name_from_basket_alert(self):
         product_name_from_basket_alert = self.browser.find_element(*ProductPageLocators.BASSKET_ALLERT_PRODUCT_NAME)
-        return product_name_from_basket_alert.text
+        current_product = self.get_product_name()
+        product_name_in_alert = product_name_from_basket_alert.text
+
+        assert product_name_in_alert == current_product
     
     def get_product_price(self):
         product_price = self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE)
@@ -40,7 +43,11 @@ class ProductPage(BasePage):
     
     def get_product_price_from_basket_alert(self):
         product_price_basket_alert = self.browser.find_element(*ProductPageLocators.BASKET_ALERT_PRICE)
-        return product_price_basket_alert.text
+        current_price = self.get_product_price()
+        product_price_in_alert = product_price_basket_alert.text
+        
+        assert current_price == product_price_in_alert
+        
     
     def should_not_be_success_message(self):
         assert self.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE), \

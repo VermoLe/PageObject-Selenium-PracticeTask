@@ -14,7 +14,7 @@ class BasePage():
     def open(self):
         self.browser.get(self.url)
 
-    def is_element_present(self, how, what):            #Если буду использовать, убрать, потому что в стандартных исключениях видно из-за чего ошибка, да и  зачем это писать, челы серьёзно буквы в консоли читать не умеют или что 
+    def is_element_present(self, how, what):            
         try:
             self.browser.find_element(how, what)
         except (NoSuchElementException):

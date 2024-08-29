@@ -28,51 +28,44 @@ class TestUserAddToBasketFromProductPage():
             basket_page.check_basket_not_empty()
         except NoSuchElementException:
             pass
-        else:
-            assert basket_page.check_basket_not_empty() == None
-        basket_massage = basket_page.check_basket_empty()
-        print(basket_massage)
-        assert basket_massage != None
+        basket_page.check_basket_empty()
     
-    def  test_user_add_product_to_basket_check_name_alert(self, browser):
+    @pytest.mark.need_review
+    def  test_user_can_add_product_to_basket(self, browser):
         link ="http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
         page = ProductPage(browser, link)
         page.open()
         page.add_to_basket()
-        #page.solve_quiz_and_get_code()
+        
 
-        current_product = page.get_product_name()
-        product_name_in_alert = page.get_product_name_from_basket_alert()
+        
+        page.get_product_name_from_basket_alert()
 
-        assert product_name_in_alert == current_product
+        
 #pytest -s --language=ru test_product_page.py::TestUserAddToBasketFromProductPage
 
-@pytest.mark.skip
-@pytest.mark.parametrize('link', urls)
-def  test_guest_add_product_to_basket_check_name_alert(browser,link):
+
+@pytest.mark.need_review
+@pytest.mark.parametrize('link', [
+    pytest.param(url, marks=pytest.mark.xfail) if url == urls[7] else url for url in urls])
+def  test_guest_can_add_product_to_basket(browser,link):
     
     page = ProductPage(browser, link)
     page.open()
     page.add_to_basket()
     page.solve_quiz_and_get_code()
 
-    current_product = page.get_product_name()
-    product_name_in_alert = page.get_product_name_from_basket_alert()
+    page.get_product_name_from_basket_alert()
 
-    assert product_name_in_alert == current_product
 
-@pytest.mark.skip
 @pytest.mark.parametrize('link', urls)
 def test_guest_add_product_to_basket_check_price_alert(browser, link):
     page = ProductPage(browser, link)
     page.open()
     page.add_to_basket()
     page.solve_quiz_and_get_code()
+    page.get_product_price_from_basket_alert()
 
-    current_price = page.get_product_price()
-    product_price_in_alert = page.get_product_price_from_basket_alert()
-
-    assert current_price == product_price_in_alert
 
 def test_guest_should_see_login_link_on_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
@@ -80,6 +73,7 @@ def test_guest_should_see_login_link_on_product_page(browser):
     page.open()
     page.should_be_login_link()
 
+@pytest.mark.need_review
 def test_guest_can_go_to_login_page_from_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
     page = ProductPage(browser, link)
@@ -95,10 +89,10 @@ def test_guest_see_product_in_basket_opened_from_main_page(browser):
     page.open()
     page.go_to_bassket_page()
     basket_page = BasketPage(browser, browser.current_url)
-    basket_items = basket_page.check_basket_not_empty()
-    print (basket_items)
-    assert basket_items != None
+    basket_page.check_basket_not_empty()
 
+
+@pytest.mark.need_review
 def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
     page = ProductPage(browser, link)
@@ -109,10 +103,30 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
         basket_page.check_basket_not_empty()
     except NoSuchElementException:
         pass
-    else:
-        assert basket_page.check_basket_not_empty() == None
-    basket_massage = basket_page.check_basket_empty()
-    print(basket_massage)
-    assert basket_massage != None
+    basket_page.check_basket_empty()
+
+
+
+@pytest.mark.xfail(reason="element is present")
+def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
+    link =  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
+    page = ProductPage(browser, link)
+    page.open()
+    page.add_to_basket()
+    page.should_not_be_success_message()
+
+def test_guest_cant_see_success_message(browser):
+    link =  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
+    page = ProductPage(browser, link)
+    page.open()
+    page.should_not_be_success_message()
+
+@pytest.mark.xfail(reason="message not disappeared")
+def test_message_disappeared_after_adding_product_to_basket(browser):
+    link =  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
+    page = ProductPage(browser, link)
+    page.open()
+    page.add_to_basket()
+    page.should_message_disappeared()
 
 #pytest -s --language=ru test_product_page.py

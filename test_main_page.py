@@ -20,7 +20,7 @@ class TestLoginFromMainPage():
     def test_guest_should_see_login_link(self, browser):
         page = MainPage(browser, link)
         page.open()
-        page.should_be_login_link()   #Перемудрили с абстракцией .is_element_present(By.CSS_SELECTOR, "#login_link_invalid"), "Login link is not presented"
+        page.should_be_login_link()   
 
 @pytest.mark.xfail(reason="Geust not see items in basket ")
 def test_guest_see_product_in_basket_opened_from_main_page(browser):
@@ -28,9 +28,8 @@ def test_guest_see_product_in_basket_opened_from_main_page(browser):
     page.open()
     page.go_to_bassket_page()
     basket_page = BasketPage(browser, browser.current_url)
-    basket_items = basket_page.check_basket_not_empty()
-    print (basket_items)
-    assert basket_items != None
+    basket_page.check_basket_not_empty()
+
 
 def  test_guest_cant_see_product_in_basket_opened_from_main_page(browser):
     page = MainPage(browser, link)
@@ -41,10 +40,7 @@ def  test_guest_cant_see_product_in_basket_opened_from_main_page(browser):
         basket_page.check_basket_not_empty()
     except NoSuchElementException:
         pass
-    else:
-        assert basket_page.check_basket_not_empty() == None
-    basket_massage = basket_page.check_basket_empty()
-    print(basket_massage)
-    assert basket_massage != None
+    basket_page.check_basket_empty()
+
 
 #pytest -v --tb=line --language=en test_main_page.py
